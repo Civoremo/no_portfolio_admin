@@ -1,3 +1,5 @@
+/** @format */
+
 .App {
   text-align: center;
 }
@@ -35,4 +37,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.login-link-contianer > a {
+  font-size: 1.5rem;
+  border: 1px solid #222;
+  padding: 0.2rem 1rem 0.2rem 1rem;
+  border-radius: 10px;
+  color: #222;
+  background-color: lightgray;
+  text-decoration: none;
+}
+
+.login-link-contianer > a:hover {
+  font-size: 1.5rem;
+  border: 1px solid #222;
+  padding: 0.2rem 1rem 0.2rem 1rem;
+  border-radius: 10px;
+  background-color: rgb(25, 71, 157);
+  color: #fff;
 }
