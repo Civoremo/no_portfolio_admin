@@ -2,17 +2,6 @@
   "name": "portfolio-admin",
   "version": "0.1.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Civoremo/no_portfolio_admin.git"
-  },
-  "keywords": [],
-  "author": "Nedim Omerovic - @civoremo",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Civoremo/no_portfolio_admin/issues"
-  },
-  "homepage": "https://github.com/Civoremo/no_portfolio_admin#readme",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
