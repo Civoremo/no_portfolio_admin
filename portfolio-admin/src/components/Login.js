@@ -24,7 +24,7 @@ const Login = () => {
         responseType: "json",
       })
         .then(result => {
-          console.log("login result", result);
+          //   console.log("login result", result);
           if (result.status === 204) {
             setTypedEmail("");
             setTypedPassword("");
@@ -40,11 +40,14 @@ const Login = () => {
             );
             setTypedEmail("");
             setTypedPassword("");
-            // historyRedirect.push("/dashboard");
+            historyRedirect.push("/dashboard");
           }
         })
         .catch(err => {
-          console.log("LOGIN ERROR", err);
+          //   console.log("LOGIN ERROR", err);
+          setTypedEmail("");
+          setTypedPassword("");
+          alert("Something went wrong during login!");
         });
     } else {
       alert("Check input fields and try again!");

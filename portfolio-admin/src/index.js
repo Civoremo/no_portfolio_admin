@@ -9,6 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 
 import App from "./components/App";
 import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 
 const history = createBrowserHistory();
 
@@ -18,7 +19,7 @@ ReactDOM.render(
       <Switch>
         <Route exact={true} path={"/"} component={App} />
         <Route path={"/login"} component={Login} />
-        {/* <Route path={"/dashboard"} component={Dashboard} /> */}
+        <Route path={"/dashboard"} component={Dashboard} />
       </Switch>
     </React.StrictMode>
   </Router>,
