@@ -2,9 +2,14 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+
+import "../css/Dashboard.css";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
+
+  // used to verify an authorized admin is viewing page
   useEffect(() => {
     axios({
       method: "get",
@@ -15,6 +20,7 @@ const Dashboard = () => {
       responseType: "json",
     })
       .then(result => {
+        console.log("verify", result);
         if (result.status !== 200) {
           localStorage.clear();
           historyRedirect.push("/login");
@@ -24,11 +30,33 @@ const Dashboard = () => {
         localStorage.clear();
         historyRedirect.push("/login");
       });
-  }, []);
+  }, [historyRedirect]);
 
   return (
-    <div>
-      <div>Dashboard component goes here</div>
+    <div className='dashboard-container'>
+      <div className='dashboard-header'>Portfolio CMS</div>
+      <div className='dashboard-main-content'>
+        <div className='dashboard-link-section'>
+          <Link className='nav-link' to='/dashboard'>
+            Home
+          </Link>
+          <Link className='nav-link' to='/dashboard/about'>
+            About Content
+          </Link>
+          <Link className='nav-link' to='/dashboard/projects'>
+            Projects
+          </Link>
+          <Link className='nav-link' to='/dashboard/contact'>
+            Contact Content
+          </Link>
+          <Link className='nav-link' to='/login'>
+            Log Out
+          </Link>
+        </div>
+        <div className='dashboard-components'>
+          Components will render here to manage portfolio content.
+        </div>
+      </div>
     </div>
   );
 };
