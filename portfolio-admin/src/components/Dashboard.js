@@ -2,9 +2,10 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 
 import "../css/Dashboard.css";
+import About from "./About";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -54,7 +55,8 @@ const Dashboard = () => {
           </Link>
         </div>
         <div className='dashboard-components'>
-          Components will render here to manage portfolio content.
+          {/* Components will render here to manage portfolio content. */}
+          <Route path='/dashboard/about' render={props => <About />} />
         </div>
       </div>
     </div>
