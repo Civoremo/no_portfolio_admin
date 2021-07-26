@@ -2,18 +2,21 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
-const About = () => {
+const About = ({ sectionId }) => {
+  let historyRedirect = useHistory();
   const [aboutContent, setAboutContent] = useState(null);
 
-  const editContent = (e, sectionId) => {
+  const editContent = (e, id) => {
     e.preventDefault();
-    console.log("edit button clicked", sectionId);
+    console.log("edit button clicked", id);
+    historyRedirect.push(`/dashboard/about/edit/${id}`);
   };
 
-  const deleteContent = (e, sectionId) => {
+  const deleteContent = (e, id) => {
     e.preventDefault();
-    console.log("delete button clicked", sectionId);
+    console.log("delete button clicked", id);
   };
 
   useEffect(() => {

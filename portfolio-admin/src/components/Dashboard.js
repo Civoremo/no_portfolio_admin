@@ -1,14 +1,16 @@
 /** @format */
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 import { Link, Route } from "react-router-dom";
 
 import "../css/Dashboard.css";
 import About from "./About";
+import EditAbout from "./EditAbout";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
+  let sectionId = useRef(null);
 
   // used to verify an authorized admin is viewing page
   useEffect(() => {
@@ -56,7 +58,15 @@ const Dashboard = () => {
         </div>
         <div className='dashboard-components'>
           {/* Components will render here to manage portfolio content. */}
-          <Route path='/dashboard/about' render={props => <About />} />
+          <Route
+            exact={true}
+            path='/dashboard/about'
+            render={props => <About sectionId={sectionId} />}
+          />
+          <Route
+            path='/dashboard/about/edit/:id'
+            render={props => <EditAbout />}
+          />
         </div>
       </div>
     </div>
