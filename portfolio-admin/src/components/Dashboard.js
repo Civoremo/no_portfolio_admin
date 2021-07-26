@@ -1,6 +1,6 @@
 /** @format */
 import axios from "axios";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import { Link, Route } from "react-router-dom";
 
@@ -10,7 +10,6 @@ import EditAbout from "./EditAbout";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
-  let sectionId = useRef(null);
 
   // used to verify an authorized admin is viewing page
   useEffect(() => {
@@ -61,7 +60,7 @@ const Dashboard = () => {
           <Route
             exact={true}
             path='/dashboard/about'
-            render={props => <About sectionId={sectionId} />}
+            render={props => <About />}
           />
           <Route
             path='/dashboard/about/edit/:id'
