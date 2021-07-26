@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-const About = ({ sectionId }) => {
+const About = () => {
   let historyRedirect = useHistory();
   const [aboutContent, setAboutContent] = useState(null);
 
