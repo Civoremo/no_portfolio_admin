@@ -12,6 +12,7 @@ const EditAbout = () => {
   const [contentInput, setContentInput] = useState("");
   const [contentId, setContentId] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
+  const [showAddNewContent, setShowAddNewContent] = useState(false);
 
   useEffect(() => {
     axios({
@@ -50,6 +51,7 @@ const EditAbout = () => {
       .then(result => {
         if (result.status === 200) {
           setChangeCount(changeCount + 1);
+          afterChangeCleanUp();
         } else {
           alert("Something went wrong with update");
         }
@@ -75,6 +77,7 @@ const EditAbout = () => {
             onFocus={event => {
               setContentInput(event.target.value);
               setContentId(content.id);
+              setShowAddNewContent(false);
             }}
             onChange={event => setContentInput(event.target.value)}
           />
@@ -85,6 +88,86 @@ const EditAbout = () => {
         </div>
       );
     });
+  };
+
+  const deleteContent = (e, id) => {
+    e.preventDefault();
+    axios({
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}/about/content/delete`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("deleted content", result);
+      })
+      .catch(err => {
+        console.log("failed to delete content");
+      });
+  };
+
+  const saveNewContent = e => {
+    e.preventDefault();
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}/about/content/register`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        about_id: id,
+        textContent: contentInput,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        // console.log("new content added", result);
+        if (result.status === 201) {
+          setChangeCount(changeCount + 1);
+          afterChangeCleanUp();
+        } else {
+          alert(
+            "Something went wrong with POSTING new content!",
+            result.status
+          );
+        }
+      })
+      .catch(err => {
+        // console.log("failed to post new content");
+        alert("Failed to POST new content!");
+      });
+  };
+
+  const addNewContent = () => {
+    // e.preventDefault();
+    return (
+      <div>
+        <form>
+          <textarea
+            placeholder='Type content here ...'
+            cols='80'
+            rows='10'
+            value={contentInput}
+            onFocus={event => {
+              setContentInput("");
+              setContentId(null);
+            }}
+            onChange={event => setContentInput(event.target.value)}
+          />
+          <button onClick={event => saveNewContent(event)}>Save</button>
+        </form>
+      </div>
+    );
+  };
+
+  const afterChangeCleanUp = () => {
+    setContentInput("");
+    setShowAddNewContent(false);
   };
 
   if (aboutContent === null) {
@@ -110,7 +193,17 @@ const EditAbout = () => {
         <div>{displaySectionContent()}</div>
       </form>
       <div>
-        <button>Add New Content</button>
+        <button
+          onClick={event => {
+            setShowAddNewContent(!showAddNewContent);
+            if (!showAddNewContent) setContentInput("");
+          }}
+        >
+          {showAddNewContent ? "Cancel" : "Add New Content"}
+        </button>
+        <div style={{ display: showAddNewContent ? "block" : "none" }}>
+          {addNewContent()}
+        </div>
       </div>
     </div>
   );
