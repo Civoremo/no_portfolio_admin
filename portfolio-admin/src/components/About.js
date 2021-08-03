@@ -36,7 +36,7 @@ const About = () => {
       .catch(err => {
         console.log("about content failed to fetch");
       });
-  }, []);
+  }, [showAddNewAbout]);
 
   const displayAboutContent = () => {
     return aboutContent.map(section => {
@@ -129,7 +129,10 @@ const About = () => {
       </div>
       <br />
       <div style={{ display: showAddNewAbout ? "block" : "none" }}>
-        <AddAbout />
+        <AddAbout
+          showAddNewAbout={showAddNewAbout}
+          setShowAddNewAbout={setShowAddNewAbout}
+        />
       </div>
       <br />
       <div>{displayAboutContent()}</div>
