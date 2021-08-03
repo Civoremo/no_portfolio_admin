@@ -10,16 +10,42 @@ const About = () => {
   let historyRedirect = useHistory();
   const [aboutContent, setAboutContent] = useState(null);
   const [showAddNewAbout, setShowAddNewAbout] = useState(false);
+  const [contentChange, setContentChange] = useState(0);
 
   const editContent = (e, id) => {
     e.preventDefault();
-    console.log("edit button clicked", id);
+    // console.log("edit button clicked", id);
     historyRedirect.push(`/dashboard/about/edit/${id}`);
   };
 
   const deleteContent = (e, id) => {
     e.preventDefault();
-    console.log("delete button clicked", id);
+    const deleteCheck = window.confirm(
+      "Are  you sure you want to delete this section?"
+    );
+
+    if (deleteCheck) {
+      // console.log("delete button clicked", id);
+      axios({
+        method: "delete",
+        url: `${process.env.REACT_APP_API_URL}/about/section/delete`,
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+        },
+        data: {
+          id: id,
+        },
+        responseType: "json",
+      })
+        .then(result => {
+          // console.log("deleted section", result);
+          setContentChange(contentChange + 1);
+        })
+        .catch(err => {
+          // console.log("failed to delete section", err);
+          alert("Failed to delete Section!");
+        });
+    }
   };
 
   useEffect(() => {
@@ -30,13 +56,14 @@ const About = () => {
       responseType: "json",
     })
       .then(result => {
-        console.log("about result", result);
+        // console.log("about result", result);
         setAboutContent(result.data);
       })
       .catch(err => {
         console.log("about content failed to fetch");
+        alert("Failed to delete Section!");
       });
-  }, []);
+  }, [showAddNewAbout, contentChange]);
 
   const displayAboutContent = () => {
     return aboutContent.map(section => {
@@ -109,7 +136,7 @@ const About = () => {
   };
 
   const addNewAbout = () => {
-    console.log("show add component");
+    // console.log("show add component");
     setShowAddNewAbout(!showAddNewAbout);
   };
 
@@ -125,11 +152,13 @@ const About = () => {
         onClick={event => addNewAbout()}
       >
         {showAddNewAbout ? "Cancel" : "Add New +"}
-        {/* Add New + */}
       </div>
       <br />
       <div style={{ display: showAddNewAbout ? "block" : "none" }}>
-        <AddAbout />
+        <AddAbout
+          showAddNewAbout={showAddNewAbout}
+          setShowAddNewAbout={setShowAddNewAbout}
+        />
       </div>
       <br />
       <div>{displayAboutContent()}</div>
