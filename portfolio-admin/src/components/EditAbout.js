@@ -84,7 +84,9 @@ const EditAbout = () => {
           <button onClick={event => saveContent(event, content.id)}>
             Save
           </button>
-          <button>Delete</button>
+          <button onClick={event => deleteContent(event, content.id)}>
+            Delete
+          </button>
         </div>
       );
     });
@@ -105,9 +107,16 @@ const EditAbout = () => {
     })
       .then(result => {
         console.log("deleted content", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+          afterChangeCleanUp();
+        } else {
+          alert("Something went wrong with deleting content!", result.status);
+        }
       })
       .catch(err => {
         console.log("failed to delete content");
+        alert("Failed to delete content!");
       });
   };
 
