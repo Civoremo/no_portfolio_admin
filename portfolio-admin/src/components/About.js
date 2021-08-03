@@ -4,9 +4,12 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
+import AddAbout from "./AddAbout";
+
 const About = () => {
   let historyRedirect = useHistory();
   const [aboutContent, setAboutContent] = useState(null);
+  const [showAddNewAbout, setShowAddNewAbout] = useState(false);
 
   const editContent = (e, id) => {
     e.preventDefault();
@@ -39,13 +42,17 @@ const About = () => {
     return aboutContent.map(section => {
       //   console.log("section", section);
       return (
-        <div key={section[0].id}>
+        <div
+          key={section[0].id}
+          style={{ border: "1px solid grey", marginBottom: "20px" }}
+        >
           <div
             style={{
               display: "flex",
               // border: "1px solid red",
               width: "80px",
               justifyContent: "space-between",
+              marginLeft: "20px",
             }}
           >
             <div
@@ -61,6 +68,7 @@ const About = () => {
               Delete
             </div>
           </div>
+          <hr />
           <h2
             style={{
               textAlign: "left",
@@ -100,6 +108,11 @@ const About = () => {
     });
   };
 
+  const addNewAbout = () => {
+    console.log("show add component");
+    setShowAddNewAbout(!showAddNewAbout);
+  };
+
   if (aboutContent === null) {
     return <>Loading</>;
   }
@@ -107,6 +120,18 @@ const About = () => {
   return (
     <div>
       {/* <div>about component goes here</div> */}
+      <div
+        className='content-interaction-buttons'
+        onClick={event => addNewAbout()}
+      >
+        {showAddNewAbout ? "Cancel" : "Add New +"}
+        {/* Add New + */}
+      </div>
+      <br />
+      <div style={{ display: showAddNewAbout ? "block" : "none" }}>
+        <AddAbout />
+      </div>
+      <br />
       <div>{displayAboutContent()}</div>
     </div>
   );
