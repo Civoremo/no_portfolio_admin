@@ -67,7 +67,11 @@ const Dashboard = () => {
             path='/dashboard/about/edit/:id'
             render={props => <EditAbout />}
           />
-          <Route path='/dashboard/projects' render={props => <Projects />} />
+          <Route
+            exact={true}
+            path='/dashboard/projects'
+            render={props => <Projects />}
+          />
         </div>
       </div>
     </div>
