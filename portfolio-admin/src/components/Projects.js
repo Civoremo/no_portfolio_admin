@@ -5,11 +5,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import "../css/Projects.css";
+import AddProject from "./AddProject";
 
 const Projects = () => {
   let historyRedirect = useHistory();
   const [projects, setProjects] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
+  const [showAddNew, setShowAddNew] = useState(false);
 
   useEffect(() => {
     axios({
@@ -130,14 +132,43 @@ const Projects = () => {
     });
   };
 
+  const addNewProject = () => {
+    return (
+      <div>
+        <div
+          style={{
+            display: "flex",
+            // border: "1px solid red",
+            // width: "80px",
+            justifyContent: "space-between",
+            marginLeft: "20px",
+          }}
+        >
+          <div
+            className='content-interaction-buttons'
+            onClick={event => setShowAddNew(!showAddNew)}
+          >
+            {showAddNew ? "Cancel" : "Add New +"}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (projects === null) {
     return <>Loading ...</>;
   }
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {/* <div>Project component to be displayed here.</div> */}
-      {displayProjects()}
+    <div>
+      {addNewProject()}
+      <div style={{ display: showAddNew ? "block" : "none" }}>
+        <AddProject />
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {/* <div>Project component to be displayed here.</div> */}
+        {displayProjects()}
+      </div>
     </div>
   );
 };
