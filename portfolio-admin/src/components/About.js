@@ -116,6 +116,7 @@ const About = () => {
                   style={{
                     display: "flex",
                     margin: "0 100px 0 100px",
+                    whiteSpace: "pre-wrap",
                   }}
                 >
                   <div

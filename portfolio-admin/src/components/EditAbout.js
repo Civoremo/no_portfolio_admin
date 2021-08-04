@@ -24,10 +24,10 @@ const EditAbout = () => {
         setAboutContent(result.data);
         setSectionTitle(result.data[0].title);
 
-        const sortedContentByAscId = result.data[1].sort((a, b) => {
-          return a.id - b.id;
-        });
-        setSectionContent(sortedContentByAscId);
+        // const sortedContentByAscId = result.data[1].sort((a, b) => {
+        //   return a.id - b.id;
+        // });
+        setSectionContent(result.data[1]);
       })
       .catch(err => {
         console.log("about content by ID failed to fetch");
@@ -174,9 +174,38 @@ const EditAbout = () => {
     );
   };
 
+  const saveTitle = e => {
+    e.preventDefault();
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/about/section/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        title: sectionTitle,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        // console.log("title update result", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+          afterChangeCleanUp();
+        } else {
+          alert("Failed to PUT section title!", result.status);
+        }
+      })
+      .catch(err => {
+        alert("Something went wrong with updating Section Title!");
+      });
+  };
+
   const afterChangeCleanUp = () => {
     setContentInput("");
     setShowAddNewContent(false);
+    setSectionTitle("");
   };
 
   if (aboutContent === null) {
@@ -198,7 +227,7 @@ const EditAbout = () => {
             setSectionTitle(event.target.value);
           }}
         />
-        <button>Save</button>
+        <button onClick={event => saveTitle(event)}>Save</button>
         <div>{displaySectionContent()}</div>
       </form>
       <div>
