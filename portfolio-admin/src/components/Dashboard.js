@@ -5,9 +5,13 @@ import { useHistory } from "react-router";
 import { Link, Route } from "react-router-dom";
 
 import "../css/Dashboard.css";
+import Home from "./Home";
 import About from "./About";
 import EditAbout from "./EditAbout";
 import Projects from "./Projects";
+import EditProject from "./EditProject";
+import ProjectExtendedInfo from "./ProjectExtendedInfo";
+import EditProjectExtendedInfo from "./EditProjectExtendedInfo";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -58,6 +62,7 @@ const Dashboard = () => {
         </div>
         <div className='dashboard-components'>
           {/* Components will render here to manage portfolio content. */}
+          <Route exact={true} path='/dashboard' render={props => <Home />} />
           <Route
             exact={true}
             path='/dashboard/about'
@@ -67,7 +72,26 @@ const Dashboard = () => {
             path='/dashboard/about/edit/:id'
             render={props => <EditAbout />}
           />
-          <Route path='/dashboard/projects' render={props => <Projects />} />
+          <Route
+            exact={true}
+            path='/dashboard/projects'
+            render={props => <Projects />}
+          />
+          <Route
+            exact={true}
+            path='/dashboard/projects/edit/:id'
+            render={props => <EditProject />}
+          />
+          <Route
+            exact={true}
+            path='/dashboard/projects/extended/:id'
+            render={props => <ProjectExtendedInfo />}
+          />
+          <Route
+            exact={true}
+            path='/dashboard/projects/extended/:id/edit'
+            render={props => <EditProjectExtendedInfo />}
+          />
         </div>
       </div>
     </div>
