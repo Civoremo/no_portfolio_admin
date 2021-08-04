@@ -24,10 +24,10 @@ const EditAbout = () => {
         setAboutContent(result.data);
         setSectionTitle(result.data[0].title);
 
-        const sortedContentByAscId = result.data[1].sort((a, b) => {
-          return a.id - b.id;
-        });
-        setSectionContent(sortedContentByAscId);
+        // const sortedContentByAscId = result.data[1].sort((a, b) => {
+        //   return a.id - b.id;
+        // });
+        setSectionContent(result.data[1]);
       })
       .catch(err => {
         console.log("about content by ID failed to fetch");
