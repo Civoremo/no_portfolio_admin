@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { Link, Route } from "react-router-dom";
 
 import "../css/Dashboard.css";
+import Home from "./Home";
 import About from "./About";
 import EditAbout from "./EditAbout";
 import Projects from "./Projects";
@@ -61,6 +62,7 @@ const Dashboard = () => {
         </div>
         <div className='dashboard-components'>
           {/* Components will render here to manage portfolio content. */}
+          <Route exact={true} path='/dashboard' render={props => <Home />} />
           <Route
             exact={true}
             path='/dashboard/about'
