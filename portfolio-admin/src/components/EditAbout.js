@@ -94,30 +94,36 @@ const EditAbout = () => {
 
   const deleteContent = (e, id) => {
     e.preventDefault();
-    axios({
-      method: "delete",
-      url: `${process.env.REACT_APP_API_URL}/about/content/delete`,
-      headers: {
-        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
-      },
-      data: {
-        id: id,
-      },
-      responseType: "json",
-    })
-      .then(result => {
-        console.log("deleted content", result);
-        if (result.status === 200) {
-          setChangeCount(changeCount + 1);
-          afterChangeCleanUp();
-        } else {
-          alert("Something went wrong with deleting content!", result.status);
-        }
+    let deleteCheck = window.confirm(
+      "Are you sure you want to delete the content?"
+    );
+
+    if (deleteCheck) {
+      axios({
+        method: "delete",
+        url: `${process.env.REACT_APP_API_URL}/about/content/delete`,
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+        },
+        data: {
+          id: id,
+        },
+        responseType: "json",
       })
-      .catch(err => {
-        console.log("failed to delete content");
-        alert("Failed to delete content!");
-      });
+        .then(result => {
+          console.log("deleted content", result);
+          if (result.status === 200) {
+            setChangeCount(changeCount + 1);
+            afterChangeCleanUp();
+          } else {
+            alert("Something went wrong with deleting content!", result.status);
+          }
+        })
+        .catch(err => {
+          console.log("failed to delete content");
+          alert("Failed to delete content!");
+        });
+    }
   };
 
   const saveNewContent = e => {
