@@ -174,9 +174,38 @@ const EditAbout = () => {
     );
   };
 
+  const saveTitle = e => {
+    e.preventDefault();
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/about/section/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        title: sectionTitle,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        // console.log("title update result", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+          afterChangeCleanUp();
+        } else {
+          alert("Failed to PUT section title!", result.status);
+        }
+      })
+      .catch(err => {
+        alert("Something went wrong with updating Section Title!");
+      });
+  };
+
   const afterChangeCleanUp = () => {
     setContentInput("");
     setShowAddNewContent(false);
+    setSectionTitle("");
   };
 
   if (aboutContent === null) {
@@ -198,7 +227,7 @@ const EditAbout = () => {
             setSectionTitle(event.target.value);
           }}
         />
-        <button>Save</button>
+        <button onClick={event => saveTitle(event)}>Save</button>
         <div>{displaySectionContent()}</div>
       </form>
       <div>
