@@ -22,6 +22,7 @@ const Projects = () => {
       .then(result => {
         console.log("projects", result);
         setProjects(result.data);
+        setShowAddNew(false);
       })
       .catch(err => {
         console.log("failed to retrieve all projects data");
@@ -163,7 +164,7 @@ const Projects = () => {
     <div>
       {addNewProject()}
       <div style={{ display: showAddNew ? "block" : "none" }}>
-        <AddProject />
+        <AddProject changeCount={changeCount} setChangeCount={setChangeCount} />
       </div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {/* <div>Project component to be displayed here.</div> */}
