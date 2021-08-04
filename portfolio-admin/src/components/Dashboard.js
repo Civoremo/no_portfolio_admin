@@ -10,6 +10,7 @@ import EditAbout from "./EditAbout";
 import Projects from "./Projects";
 import EditProject from "./EditProject";
 import ProjectExtendedInfo from "./ProjectExtendedInfo";
+import EditProjectExtendedInfo from "./EditProjectExtendedInfo";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -83,6 +84,11 @@ const Dashboard = () => {
             exact={true}
             path='/dashboard/projects/extended/:id'
             render={props => <ProjectExtendedInfo />}
+          />
+          <Route
+            exact={true}
+            path='/dashboard/projects/extended/:id/edit'
+            render={props => <EditProjectExtendedInfo />}
           />
         </div>
       </div>
