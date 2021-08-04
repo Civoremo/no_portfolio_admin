@@ -8,6 +8,7 @@ import "../css/Dashboard.css";
 import About from "./About";
 import EditAbout from "./EditAbout";
 import Projects from "./Projects";
+import EditProject from "./EditProject";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -71,6 +72,11 @@ const Dashboard = () => {
             exact={true}
             path='/dashboard/projects'
             render={props => <Projects />}
+          />
+          <Route
+            exact={true}
+            path='/dashboard/projects/edit/:id'
+            render={props => <EditProject />}
           />
         </div>
       </div>
