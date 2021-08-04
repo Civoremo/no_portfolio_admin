@@ -7,6 +7,7 @@ import { Link, Route } from "react-router-dom";
 import "../css/Dashboard.css";
 import About from "./About";
 import EditAbout from "./EditAbout";
+import Projects from "./Projects";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -66,6 +67,7 @@ const Dashboard = () => {
             path='/dashboard/about/edit/:id'
             render={props => <EditAbout />}
           />
+          <Route path='/dashboard/projects' render={props => <Projects />} />
         </div>
       </div>
     </div>
