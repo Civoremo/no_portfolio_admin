@@ -65,6 +65,11 @@ const Projects = () => {
     }
   };
 
+  const extendedProjectInfo = (e, id) => {
+    e.preventDefault();
+    historyRedirect.push(`/dashboard/projects/extended/${id}`);
+  };
+
   const displayProjects = () => {
     return projects.map(project => {
       return (
@@ -75,6 +80,9 @@ const Projects = () => {
             </button>
             <button onClick={event => deleteProject(event, project.id)}>
               Delete
+            </button>
+            <button onClick={event => extendedProjectInfo(event, project.id)}>
+              Extended Info
             </button>
           </div>
           <div className='card-wrapper-div'>
