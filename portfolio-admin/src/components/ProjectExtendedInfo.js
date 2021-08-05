@@ -35,7 +35,19 @@ const ProjectExtendedInfo = () => {
         <p>{projectExtendedInfo[0].description}</p>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {projectExtendedInfo[1].map(image => {
-            return <img src={image.image} alt={image.id + " image"} />;
+            return (
+              <div key={image.id}>
+                <img
+                  style={{
+                    width: "200px",
+                    height: "200px",
+                    margin: "20px 20px",
+                  }}
+                  src={image.image}
+                  alt={image.id + " image"}
+                />
+              </div>
+            );
           })}
         </div>
       </div>
@@ -48,7 +60,7 @@ const ProjectExtendedInfo = () => {
 
   return (
     <div>
-      <div>Extended Project Info Component</div>
+      {/* <div>Extended Project Info Component</div> */}
       <div>{displayExtendedProjectData()}</div>
     </div>
   );
