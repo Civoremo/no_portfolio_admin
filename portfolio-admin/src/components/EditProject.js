@@ -53,7 +53,7 @@ const EditProject = () => {
       responseType: "json",
     })
       .then(result => {
-        console.log("gif image updated");
+        // console.log("gif image updated");
         if (result.status === 200) {
           setChangeCount(changeCount + 1);
         } else {
@@ -65,12 +65,12 @@ const EditProject = () => {
       });
   };
 
-  const uploadImage = (e, file) => {
+  const uploadImage = (e, files) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("file", file[0]);
-    formData.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESET);
+    formData.append("file", files[0]);
+    formData.append("upload_preset", process.env.REACT_APP_UPLOAD_GIF_PRESET);
 
     const config = {
       headers: { "X-Requested-With": "XMLHttpRequest" },
@@ -83,11 +83,16 @@ const EditProject = () => {
         config
       )
       .then(result => {
-        console.log("image uploaded", result);
-        updateProjectImage(result.data.secure_url);
+        // console.log("image uploaded", result);
+        if (result.status === 200) {
+          updateProjectImage(result.data.secure_url);
+        } else {
+          alert("Something went wrong with uploading image to cloudinary!");
+        }
       })
       .catch(err => {
-        console.log("failed to upload image");
+        // console.log("failed to upload image");
+        alert("Failed to upload to Cloudinary!");
       });
   };
 
@@ -102,7 +107,11 @@ const EditProject = () => {
               alt={projectInfo[0].title + " gif preview"}
             />
           </div>
-          <input type='file' multiple={false} />
+          <input
+            type='file'
+            multiple={false}
+            onChange={event => uploadImage(event, event.target.files)}
+          />
         </div>
         <br />
         <div>
