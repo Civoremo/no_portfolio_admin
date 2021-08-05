@@ -80,8 +80,8 @@ const EditProjectExtendedInfo = () => {
             onChange={event => setDescriptionInput(event.target.value)}
           />
         </form>
-        <button>Save</button>
-        <button>Reset</button>
+        <button onClick={event => saveNewInfo(event)}>Save</button>
+        <button onClick={event => resetInputs(event)}>Reset</button>
         <br />
         <hr />
         <br />
@@ -200,6 +200,54 @@ const EditProjectExtendedInfo = () => {
       })
       .catch(err => {
         alert("Failed to delete carousel image!");
+      });
+  };
+
+  const resetInputs = e => {
+    e.preventDefault();
+    setLinkInput("");
+    setDescriptionInput("");
+  };
+
+  const setNewData = () => {
+    let newData = {
+      id: projectInfo[0].id,
+      description:
+        descriptionInput !== projectInfo[0].description &&
+        descriptionInput !== ""
+          ? descriptionInput
+          : projectInfo[0].description,
+      link:
+        linkInput !== projectInfo[0].link && linkInput !== ""
+          ? linkInput
+          : projectInfo[0].link,
+    };
+
+    return newData;
+  };
+
+  const saveNewInfo = e => {
+    e.preventDefault();
+
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/projects/content/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: setNewData(),
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("extended info updated", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with updating extended content!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update extended content!");
       });
   };
 
