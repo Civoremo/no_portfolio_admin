@@ -103,9 +103,14 @@ const EditProjectExtendedInfo = () => {
                     margin: "20px 20px 0 20px",
                   }}
                   src={image.image}
-                  alt={projectInfo[1].id + " carousel image"}
+                  alt={image.id + " carousel image"}
                 />
-                <button style={{ width: "200px" }}>Delete</button>
+                <button
+                  style={{ width: "200px" }}
+                  onClick={event => deleteImageFromCarousel(event, image.id)}
+                >
+                  Delete
+                </button>
               </div>
             );
           })}
@@ -168,6 +173,33 @@ const EditProjectExtendedInfo = () => {
       })
       .catch(err => {
         alert("Failed to update gif image for project!");
+      });
+  };
+
+  const deleteImageFromCarousel = (e, id) => {
+    e.preventDefault();
+    console.log("image ID", id);
+    axios({
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}/projects/image/delete`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("deleted carousel image", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong deleting carousel image!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to delete carousel image!");
       });
   };
 
