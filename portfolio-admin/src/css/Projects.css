@@ -11,3 +11,7 @@
 .card-wrapper-div {
   position: relative;
 }
+
+a {
+  color: yellow;
+}

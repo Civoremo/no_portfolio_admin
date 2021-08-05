@@ -5,11 +5,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import "../css/Projects.css";
+import AddProject from "./AddProject";
 
 const Projects = () => {
   let historyRedirect = useHistory();
   const [projects, setProjects] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
+  const [showAddNew, setShowAddNew] = useState(false);
 
   useEffect(() => {
     axios({
@@ -20,6 +22,7 @@ const Projects = () => {
       .then(result => {
         console.log("projects", result);
         setProjects(result.data);
+        setShowAddNew(false);
       })
       .catch(err => {
         console.log("failed to retrieve all projects data");
@@ -113,13 +116,19 @@ const Projects = () => {
               <div>
                 <h4>Links</h4>
                 {project.liveLink !== null ? (
-                  <a href={project.liveLink}>Live</a>
+                  <div>
+                    <a href={project.liveLink}>Live</a>
+                  </div>
                 ) : null}
                 {project.frontendLink !== null ? (
-                  <a href={project.frontendLink}>Frontend</a>
+                  <div>
+                    <a href={project.frontendLink}>Frontend</a>
+                  </div>
                 ) : null}
                 {project.backendLink !== null ? (
-                  <a href={project.backendLink}>Backend</a>
+                  <div>
+                    <a href={project.backendLink}>Backend</a>
+                  </div>
                 ) : null}
               </div>
               <br />
@@ -130,14 +139,43 @@ const Projects = () => {
     });
   };
 
+  const addNewProject = () => {
+    return (
+      <div>
+        <div
+          style={{
+            display: "flex",
+            // border: "1px solid red",
+            // width: "80px",
+            justifyContent: "space-between",
+            marginLeft: "20px",
+          }}
+        >
+          <div
+            className='content-interaction-buttons'
+            onClick={event => setShowAddNew(!showAddNew)}
+          >
+            {showAddNew ? "Cancel" : "Add New +"}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (projects === null) {
     return <>Loading ...</>;
   }
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {/* <div>Project component to be displayed here.</div> */}
-      {displayProjects()}
+    <div>
+      {addNewProject()}
+      <div style={{ display: showAddNew ? "block" : "none" }}>
+        <AddProject changeCount={changeCount} setChangeCount={setChangeCount} />
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {/* <div>Project component to be displayed here.</div> */}
+        {displayProjects()}
+      </div>
     </div>
   );
 };
