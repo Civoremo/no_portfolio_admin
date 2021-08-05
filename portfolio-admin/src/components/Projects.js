@@ -73,10 +73,43 @@ const Projects = () => {
     historyRedirect.push(`/dashboard/projects/extended/${id}`);
   };
 
+  const changeFeaturedStatus = (e, id, featured) => {
+    e.preventDefault();
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/projects/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        featured: featured ? false : true,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("featured updated", result);
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong trying to update featured.");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update featured on Project!");
+      });
+  };
+
   const displayProjects = () => {
     return projects.map(project => {
       return (
-        <div key={project.id} className='card-div'>
+        <div
+          key={project.id}
+          className='card-div'
+          style={{
+            border: project.featured ? "1px solid green" : "1px solid red",
+          }}
+        >
           <div style={{ display: "flex", justifyContent: "center" }}>
             <button onClick={event => editProject(event, project.id)}>
               Edit
@@ -86,6 +119,13 @@ const Projects = () => {
             </button>
             <button onClick={event => extendedProjectInfo(event, project.id)}>
               Extended Info
+            </button>
+            <button
+              onClick={event =>
+                changeFeaturedStatus(event, project.id, project.featured)
+              }
+            >
+              Featured
             </button>
           </div>
           <div className='card-wrapper-div'>
