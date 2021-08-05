@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const AddProject = ({ changeCount, setChangeCount }) => {
   const [titleInput, setTitleInput] = useState("");

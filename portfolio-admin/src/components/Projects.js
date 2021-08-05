@@ -116,13 +116,19 @@ const Projects = () => {
               <div>
                 <h4>Links</h4>
                 {project.liveLink !== null ? (
-                  <a href={project.liveLink}>Live</a>
+                  <div>
+                    <a href={project.liveLink}>Live</a>
+                  </div>
                 ) : null}
                 {project.frontendLink !== null ? (
-                  <a href={project.frontendLink}>Frontend</a>
+                  <div>
+                    <a href={project.frontendLink}>Frontend</a>
+                  </div>
                 ) : null}
                 {project.backendLink !== null ? (
-                  <a href={project.backendLink}>Backend</a>
+                  <div>
+                    <a href={project.backendLink}>Backend</a>
+                  </div>
                 ) : null}
               </div>
               <br />
