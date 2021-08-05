@@ -39,6 +39,63 @@ const EditProject = () => {
       });
   }, [id, changeCount]);
 
+  const updateProjectImage = imageURL => {
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/projects/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        gifImage: imageURL,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        // console.log("gif image updated");
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with updating image for project.");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update gif image for project!");
+      });
+  };
+
+  const uploadImage = (e, files) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append("upload_preset", process.env.REACT_APP_UPLOAD_GIF_PRESET);
+
+    const config = {
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    };
+
+    axios
+      .post(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_IMAGE_CLOUD_NAME}/image/upload`,
+        formData,
+        config
+      )
+      .then(result => {
+        // console.log("image uploaded", result);
+        if (result.status === 200) {
+          updateProjectImage(result.data.secure_url);
+        } else {
+          alert("Something went wrong with uploading image to cloudinary!");
+        }
+      })
+      .catch(err => {
+        // console.log("failed to upload image");
+        alert("Failed to upload to Cloudinary!");
+      });
+  };
+
   const displayProjectData = () => {
     return (
       <div>
@@ -50,7 +107,11 @@ const EditProject = () => {
               alt={projectInfo[0].title + " gif preview"}
             />
           </div>
-          <button>Upload New Gif</button>
+          <input
+            type='file'
+            multiple={false}
+            onChange={event => uploadImage(event, event.target.files)}
+          />
         </div>
         <br />
         <div>

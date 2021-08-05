@@ -60,7 +60,7 @@ const About = () => {
         setAboutContent(result.data);
       })
       .catch(err => {
-        console.log("about content failed to fetch");
+        // console.log("about content failed to fetch");
         alert("Failed to delete Section!");
       });
   }, [showAddNewAbout, contentChange]);

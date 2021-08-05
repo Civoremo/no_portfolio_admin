@@ -7,6 +7,27 @@ const AddProject = ({ changeCount, setChangeCount }) => {
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
 
+  const createExtendedInfoSection = id => {
+    console.log("newly created project ID", typeof id, id);
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}/projects/content/register`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        project_id: id,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("registered extended content for project", result);
+      })
+      .catch(err => {
+        console.log("failed to register extended content for project");
+      });
+  };
+
   const saveNewProject = e => {
     e.preventDefault();
     if (titleInput.length > 0 && descriptionInput.length > 5) {
@@ -23,8 +44,9 @@ const AddProject = ({ changeCount, setChangeCount }) => {
         responseType: "json",
       })
         .then(result => {
-          // console.log("new project added", result);
+          console.log("new project added", result);
           if (result.status === 201) {
+            createExtendedInfoSection(result.data);
             setChangeCount(changeCount + 1);
           } else {
             alert("Something went wrong with POST of new project");

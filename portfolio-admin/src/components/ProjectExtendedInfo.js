@@ -2,10 +2,11 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 const ProjectExtendedInfo = () => {
   let { id } = useParams();
+  let historyRedirect = useHistory();
   const [projectExtendedInfo, setProjectExtendedInfo] = useState(null);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ const ProjectExtendedInfo = () => {
       responseType: "json",
     })
       .then(result => {
-        //   console.log("project info", result);
+        console.log("project info", result);
         if (result.status === 200) {
           setProjectExtendedInfo(result.data);
         } else {
@@ -32,26 +33,55 @@ const ProjectExtendedInfo = () => {
     // e.preventDefault();
     return (
       <div>
-        <p>{projectExtendedInfo[0].description}</p>
+        <div>Extended Description</div>
+        <hr />
+        <div style={{ border: "1px solid grey", padding: "20px 20px" }}>
+          <div
+            style={{
+              display: projectExtendedInfo[0].link !== null ? "block" : "none",
+            }}
+          >
+            <a href={projectExtendedInfo[0].link}>Additional Link</a>
+          </div>
+          <br />
+          {projectExtendedInfo[0].description}
+        </div>
+        <br />
+        <br />
+        <div>Carousel Images</div>
+        <hr />
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {projectExtendedInfo[1].map(image => {
             return (
               <div key={image.id}>
-                <img
+                <div
                   style={{
-                    width: "200px",
-                    height: "200px",
-                    margin: "20px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
-                  src={image.image}
-                  alt={image.id + " image"}
-                />
+                >
+                  <img
+                    style={{
+                      width: "auto",
+                      height: "200px",
+                      margin: "20px 20px 0 20px",
+                    }}
+                    src={image.image}
+                    alt={image.id + " image"}
+                  />
+                </div>
               </div>
             );
           })}
         </div>
       </div>
     );
+  };
+
+  const editExdendedInfo = e => {
+    e.preventDefault();
+    historyRedirect.push(`/dashboard/projects/extended/${id}/edit`);
   };
 
   if (projectExtendedInfo === null) {
@@ -61,6 +91,14 @@ const ProjectExtendedInfo = () => {
   return (
     <div>
       {/* <div>Extended Project Info Component</div> */}
+      <div
+        className='content-interaction-buttons'
+        onClick={event => editExdendedInfo(event)}
+      >
+        Edit
+      </div>
+      <br />
+      <br />
       <div>{displayExtendedProjectData()}</div>
     </div>
   );
