@@ -41,24 +41,32 @@ const EditProjectExtendedInfo = () => {
             maxWidth: "450px",
           }}
         >
-          <label>Link</label>
-          <input
-            type='text'
-            name='Project Additional Link'
-            placeholder={
-              projectInfo[0].link === null
-                ? "Additional Link ..."
-                : projectInfo[0].link
-            }
-            value={linkInput}
-            autoComplete='off'
-            onFocus={event =>
-              projectInfo[0].link !== null
-                ? setLinkInput(projectInfo[0].link)
-                : setLinkInput("")
-            }
-            onChange={event => setLinkInput(event.target.value)}
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <label>Link</label>
+            <input
+              type='text'
+              name='Project Additional Link'
+              placeholder={
+                projectInfo[0].link === null
+                  ? "Additional Link ..."
+                  : projectInfo[0].link
+              }
+              value={linkInput}
+              autoComplete='off'
+              onFocus={event =>
+                projectInfo[0].link !== null
+                  ? setLinkInput(projectInfo[0].link)
+                  : setLinkInput("")
+              }
+              onChange={event => setLinkInput(event.target.value)}
+            />
+            <button onClick={event => cleanLinkInfo(event)}>Clean</button>
+          </div>
           <label>Description</label>
           <textarea
             style={{ resize: "vertical" }}
@@ -248,6 +256,32 @@ const EditProjectExtendedInfo = () => {
       })
       .catch(err => {
         alert("Failed to update extended content!");
+      });
+  };
+
+  const cleanLinkInfo = e => {
+    e.preventDefault();
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/projects/content/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: projectInfo[0].id,
+        link: null,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("something went wrong with removing the additional link!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to remove additional Link!");
       });
   };
 
