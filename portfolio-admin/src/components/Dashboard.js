@@ -12,6 +12,8 @@ import Projects from "./Projects";
 import EditProject from "./EditProject";
 import ProjectExtendedInfo from "./ProjectExtendedInfo";
 import EditProjectExtendedInfo from "./EditProjectExtendedInfo";
+import Contacts from "./Contacts";
+import EditContact from "./EditContact";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -48,13 +50,13 @@ const Dashboard = () => {
             Home
           </Link>
           <Link className='nav-link' to='/dashboard/about'>
-            About Content
+            About
           </Link>
           <Link className='nav-link' to='/dashboard/projects'>
             Projects
           </Link>
           <Link className='nav-link' to='/dashboard/contact'>
-            Contact Content
+            Contact
           </Link>
           <Link className='nav-link' to='/login'>
             Log Out
@@ -91,6 +93,16 @@ const Dashboard = () => {
             exact={true}
             path='/dashboard/projects/extended/:id/edit'
             render={props => <EditProjectExtendedInfo />}
+          />
+          <Route
+            exact={true}
+            path={`/dashboard/contact`}
+            render={props => <Contacts />}
+          />
+          <Route
+            exact={true}
+            path={`/dashboard/contact/:id/edit`}
+            render={props => <EditContact />}
           />
         </div>
       </div>
