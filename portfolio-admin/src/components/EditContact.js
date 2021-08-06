@@ -10,6 +10,8 @@ const EditContact = () => {
   const [changeCount, setChangeCount] = useState(0);
   const [locationInput, setLocationInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
+  const [socialTitleInput, setSocialTitleInput] = useState("");
+  const [socialLinkInput, setSocialLinkInput] = useState("");
 
   useEffect(() => {
     axios({
@@ -104,9 +106,74 @@ const EditContact = () => {
           <br />
           <hr />
         </div>
-        <div>our social items</div>
+        <br />
       </div>
     );
+  };
+
+  const displaySocialInputs = () => {
+    return contactInfo[1].map(social => {
+      return (
+        <div
+          key={social.id}
+          style={{
+            border: "1px solid grey",
+            margin: "10px 10px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "10px 10px",
+            }}
+          >
+            <div>
+              <button>Delete</button>
+              <br />
+              <br />
+            </div>
+            <img
+              style={{ width: "auto", height: "100px" }}
+              src={social.image}
+              alt={social.platform_title + " logo"}
+            />
+            <br />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                margin: "20px 20px",
+              }}
+            >
+              <input type='file' multiple={false} />
+              <br />
+              <label>Title</label>
+              <input
+                type='text'
+                name='Social Name'
+                placeholder={social.platform_title}
+                value={socialTitleInput}
+                onFocus={event => setSocialTitleInput(social.platform_title)}
+                onChange={event => setSocialTitleInput(event.target.value)}
+              />
+              <button>Save</button>
+              <label>Link</label>
+              <input
+                type='text'
+                name='Social Link'
+                placeholder={social.link}
+                value={socialLinkInput}
+                onFocus={event => setSocialLinkInput(social.link)}
+                onChange={event => setSocialLinkInput(event.target.value)}
+              />
+              <button>Save</button>
+            </div>
+          </div>
+        </div>
+      );
+    });
   };
 
   if (contactInfo === null) {
@@ -117,6 +184,9 @@ const EditContact = () => {
     <div>
       {/* <div>Edit contact component</div> */}
       <div>{displayContactInputs()}</div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {displaySocialInputs()}
+      </div>
     </div>
   );
 };
