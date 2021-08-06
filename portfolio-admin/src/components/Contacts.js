@@ -2,8 +2,10 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 const Contacts = () => {
+  let historyRedirect = useHistory();
   const [contactsInfo, setContactsInfo] = useState(null);
 
   useEffect(() => {
@@ -24,6 +26,11 @@ const Contacts = () => {
         alert("Failed to get contact info!");
       });
   }, []);
+
+  const editContact = e => {
+    e.preventDefault();
+    historyRedirect.push(`/dashboard/contact/${contactsInfo[0].id}/edit`);
+  };
 
   const displayContactInfo = () => {
     return (
@@ -65,7 +72,12 @@ const Contacts = () => {
   return (
     <div>
       {/* <div>contact component goes here</div> */}
-      <div className='content-interaction-buttons'>Edit</div>
+      <div
+        className='content-interaction-buttons'
+        onClick={event => editContact(event)}
+      >
+        Edit
+      </div>
       <br />
       <hr />
       <br />

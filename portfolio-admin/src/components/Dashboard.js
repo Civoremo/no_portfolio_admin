@@ -13,6 +13,7 @@ import EditProject from "./EditProject";
 import ProjectExtendedInfo from "./ProjectExtendedInfo";
 import EditProjectExtendedInfo from "./EditProjectExtendedInfo";
 import Contacts from "./Contacts";
+import EditContact from "./EditContact";
 
 const Dashboard = () => {
   let historyRedirect = useHistory();
@@ -97,6 +98,11 @@ const Dashboard = () => {
             exact={true}
             path={`/dashboard/contact`}
             render={props => <Contacts />}
+          />
+          <Route
+            exact={true}
+            path={`/dashboard/contact/:id/edit`}
+            render={props => <EditContact />}
           />
         </div>
       </div>
