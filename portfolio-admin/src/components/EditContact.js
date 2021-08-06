@@ -147,7 +147,13 @@ const EditContact = () => {
                 margin: "20px 20px",
               }}
             >
-              <input type='file' multiple={false} />
+              <input
+                type='file'
+                multiple={false}
+                onChange={event =>
+                  uploadImage(event, event.target.files, social.id)
+                }
+              />
               <br />
               <label>Title</label>
               <input
@@ -174,6 +180,65 @@ const EditContact = () => {
         </div>
       );
     });
+  };
+
+  const updateSocialImage = (imageURL, id) => {
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/contact/social/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        image: imageURL,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        if (result.status === 200) {
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with updating social image!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update social image!");
+      });
+  };
+
+  const uploadImage = (e, files, id) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_UPLOAD_SOCIAL_PRESET
+    );
+
+    const config = {
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    };
+
+    axios
+      .post(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_IMAGE_CLOUD_NAME}/image/upload`,
+        formData,
+        config
+      )
+      .then(result => {
+        if (result.status === 200) {
+          updateSocialImage(result.data.secure_url, id);
+        } else {
+          alert(
+            "Something went wrong with uploading social image to cloudinary!"
+          );
+        }
+      })
+      .catch(err => {
+        alert("Failed to upload to cloudinary!");
+      });
   };
 
   if (contactInfo === null) {
