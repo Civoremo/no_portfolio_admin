@@ -25,13 +25,51 @@ const Contacts = () => {
       });
   }, []);
 
+  const displayContactInfo = () => {
+    return (
+      <div>
+        <div>
+          {/* <label>Current Location</label> */}
+          <div>{contactsInfo[0].location}</div>
+          <br />
+          {/* <label>Contact Email</label> */}
+          <div>{contactsInfo[0].email}</div>
+        </div>
+        <br />
+        <hr />
+        <br />
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {contactsInfo[1].map(social => {
+            return (
+              <div key={social.id} style={{ margin: "20px 20px" }}>
+                <a href={social.link}>
+                  <img
+                    style={{ width: "auto", height: "100px" }}
+                    src={social.image}
+                    alt={social.platform_title + " logo"}
+                  />
+                </a>
+                <div>{social.platform_title}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   if (contactsInfo === null) {
     return <>Loading ...</>;
   }
 
   return (
     <div>
-      <div>contact component goes here</div>
+      {/* <div>contact component goes here</div> */}
+      <div className='content-interaction-buttons'>Edit</div>
+      <br />
+      <hr />
+      <br />
+      <div>{displayContactInfo()}</div>
     </div>
   );
 };
