@@ -4,14 +4,17 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import AddSocial from "./AddSocial";
+
 const EditContact = () => {
   let { id } = useParams();
   const [contactInfo, setContactInfo] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
   const [locationInput, setLocationInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
-  const [titleInputFields, settitleInputFields] = useState({});
-  const [linkInputFields, setLinkInputFields] = useState({});
+  const [titleInputFields, settitleInputFields] = useState(null);
+  const [linkInputFields, setLinkInputFields] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
     axios({
@@ -96,7 +99,7 @@ const EditContact = () => {
               placeholder={contactInfo[0].location}
               required
               autoComplete='off'
-              value={locationInput}
+              value={locationInput || ""}
               onFocus={event => setLocationInput(contactInfo[0].location)}
               onChange={event => setLocationInput(event.target.value)}
             />
@@ -108,7 +111,7 @@ const EditContact = () => {
               placeholder={contactInfo[0].email}
               required
               autoComplete='off'
-              value={emailInput}
+              value={emailInput || ""}
               onFocus={event => setEmailInput(contactInfo[0].email)}
               onChange={event => setEmailInput(event.target.value)}
             />
@@ -175,7 +178,7 @@ const EditContact = () => {
                 name='Social Name'
                 placeholder={social.platform_title}
                 autoComplete='off'
-                value={titleInputFields[social.id]}
+                value={titleInputFields[social.id] || ""}
                 onChange={event =>
                   settitleInputFields(titleInputFields => ({
                     ...titleInputFields,
@@ -196,7 +199,7 @@ const EditContact = () => {
                 name='Social Link'
                 placeholder={social.link}
                 autoComplete='off'
-                value={linkInputFields[social.id]}
+                value={linkInputFields[social.id] || ""}
                 onChange={event =>
                   setLinkInputFields(linkInputFields => ({
                     ...linkInputFields,
@@ -296,7 +299,7 @@ const EditContact = () => {
       .then(result => {
         console.log("title save", result);
         if (result.status === 200) {
-          resetInputs();
+          //   resetInputs();
           setChangeCount(changeCount + 1);
         } else {
           alert("Something went wrong with Social Title update!");
@@ -328,7 +331,7 @@ const EditContact = () => {
       .then(result => {
         console.log("link save", result);
         if (result.status === 200) {
-          resetInputs();
+          //   resetInputs();
           setChangeCount(changeCount + 1);
         } else {
           alert("Something went wrong with updating social link!");
@@ -354,7 +357,7 @@ const EditContact = () => {
     })
       .then(result => {
         if (result.status === 200) {
-          resetInputs();
+          //   resetInputs();
           setChangeCount(changeCount + 1);
         } else {
           alert("Something went wrong with Social Contact Delete!");
@@ -365,15 +368,20 @@ const EditContact = () => {
       });
   };
 
-  const resetInputs = () => {
-    setLocationInput("");
-    setEmailInput("");
+  //   const resetInputs = () => {
+  //     setLocationInput("");
+  //     setEmailInput("");
+  //   };
+
+  const changeShowStatus = e => {
+    e.preventDefault();
+    setShowAdd(!showAdd);
   };
 
   if (
     contactInfo === null ||
-    titleInputFields === {} ||
-    linkInputFields === {}
+    titleInputFields === null ||
+    linkInputFields === null
   ) {
     return <>Loading ...</>;
   }
@@ -381,8 +389,26 @@ const EditContact = () => {
   return (
     <div>
       <div>{displayContactInputs()}</div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {displaySocialInputs()}
+      <div>
+        <div
+          className='content-interaction-buttons'
+          onClick={event => changeShowStatus(event)}
+        >
+          {showAdd ? "Cancel" : "Add New +"}
+        </div>
+        <br />
+        <div style={{ display: showAdd ? "block" : "none" }}>
+          <AddSocial
+            changeCount={changeCount}
+            setChangeCount={setChangeCount}
+            setShowAdd={setShowAdd}
+            contactID={id}
+          />
+        </div>
+        <br />
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {displaySocialInputs()}
+        </div>
       </div>
     </div>
   );
