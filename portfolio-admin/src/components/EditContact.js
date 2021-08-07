@@ -10,8 +10,8 @@ const EditContact = () => {
   const [changeCount, setChangeCount] = useState(0);
   const [locationInput, setLocationInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
-  const [socialTitleInput, setSocialTitleInput] = useState("");
-  const [socialLinkInput, setSocialLinkInput] = useState("");
+  const [titleInputFields, settitleInputFields] = useState({});
+  const [linkInputFields, setLinkInputFields] = useState({});
 
   useEffect(() => {
     axios({
@@ -20,7 +20,19 @@ const EditContact = () => {
       responseType: "json",
     })
       .then(result => {
+        // console.log("social", result);
         if (result.status === 200) {
+          let tempTitles = {};
+          let tempLinks = {};
+          for (let social of result.data[1]) {
+            tempTitles[social.id] = social.platform_title;
+          }
+          for (let social of result.data[1]) {
+            tempLinks[social.id] = social.link;
+          }
+          setLinkInputFields(tempLinks);
+          settitleInputFields(tempTitles);
+
           setContactInfo(result.data);
         } else {
           alert("Something went wrong with fetching contact info!");
@@ -130,7 +142,9 @@ const EditContact = () => {
             }}
           >
             <div>
-              <button>Delete</button>
+              <button onClick={event => deleteSocialContact(event, social.id)}>
+                Delete
+              </button>
               <br />
               <br />
             </div>
@@ -160,21 +174,41 @@ const EditContact = () => {
                 type='text'
                 name='Social Name'
                 placeholder={social.platform_title}
-                value={socialTitleInput}
-                onFocus={event => setSocialTitleInput(social.platform_title)}
-                onChange={event => setSocialTitleInput(event.target.value)}
+                autoComplete='off'
+                value={titleInputFields[social.id]}
+                onChange={event =>
+                  settitleInputFields(titleInputFields => ({
+                    ...titleInputFields,
+                    [social.id]: event.target.value,
+                  }))
+                }
               />
-              <button>Save</button>
+              <button
+                onClick={event =>
+                  saveSocialTitle(event, social.id, social.platform_title)
+                }
+              >
+                Save
+              </button>
               <label>Link</label>
               <input
                 type='text'
                 name='Social Link'
                 placeholder={social.link}
-                value={socialLinkInput}
-                onFocus={event => setSocialLinkInput(social.link)}
-                onChange={event => setSocialLinkInput(event.target.value)}
+                autoComplete='off'
+                value={linkInputFields[social.id]}
+                onChange={event =>
+                  setLinkInputFields(linkInputFields => ({
+                    ...linkInputFields,
+                    [social.id]: event.target.value,
+                  }))
+                }
               />
-              <button>Save</button>
+              <button
+                onClick={event => saveSocialLink(event, social.id, social.link)}
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
@@ -241,13 +275,111 @@ const EditContact = () => {
       });
   };
 
-  if (contactInfo === null) {
+  const saveSocialTitle = (e, id, title) => {
+    e.preventDefault();
+    console.log("title input", titleInputFields[id]);
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/contact/social/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        platform_title:
+          titleInputFields[id] !== "" && titleInputFields[id] !== title
+            ? titleInputFields[id]
+            : title,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("title save", result);
+        if (result.status === 200) {
+          resetInputs();
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with Social Title update!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update Social Title!");
+      });
+  };
+
+  const saveSocialLink = (e, id, linkURL) => {
+    e.preventDefault();
+    console.log("link input", linkInputFields[id]);
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/contact/social/update`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+        link:
+          linkInputFields[id] !== "" && linkInputFields[id] !== linkURL
+            ? linkInputFields[id]
+            : linkURL,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        console.log("link save", result);
+        if (result.status === 200) {
+          resetInputs();
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with updating social link!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to update Social Link!");
+      });
+  };
+
+  const deleteSocialContact = (e, id) => {
+    e.preventDefault();
+    axios({
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}/contact/social/delete`,
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
+      },
+      data: {
+        id: id,
+      },
+      responseType: "json",
+    })
+      .then(result => {
+        if (result.status === 200) {
+          resetInputs();
+          setChangeCount(changeCount + 1);
+        } else {
+          alert("Something went wrong with Social Contact Delete!");
+        }
+      })
+      .catch(err => {
+        alert("Failed to delete Social Contact!");
+      });
+  };
+
+  const resetInputs = () => {
+    setLocationInput("");
+    setEmailInput("");
+  };
+
+  if (
+    contactInfo === null ||
+    titleInputFields === {} ||
+    linkInputFields === {}
+  ) {
     return <>Loading ...</>;
   }
 
   return (
     <div>
-      {/* <div>Edit contact component</div> */}
       <div>{displayContactInputs()}</div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {displaySocialInputs()}
