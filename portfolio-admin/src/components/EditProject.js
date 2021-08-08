@@ -29,12 +29,10 @@ const EditProject = () => {
           let filtered = result.data.filter(
             project => project.id === parseInt(id)
           );
-          console.log("filtered", filtered);
+
           let tempInputsObject = {};
           for (let item in filtered[0]) {
-            // console.log(item);
             tempInputsObject[item] = filtered[0][item];
-            // console.log(tempInputsObject);
           }
 
           setInputFieldsData(tempInputsObject);
@@ -109,7 +107,6 @@ const EditProject = () => {
   const displayProjectData = () => {
     return (
       <div>
-        {console.log("inputs", inputFieldsData)}
         <div>
           <div>
             <img
@@ -191,7 +188,7 @@ const EditProject = () => {
               type='text'
               name='Project Live Link'
               placeholder={inputFieldsData.liveLink || "Project Live Link ..."}
-              value={liveLinkInput}
+              value={inputFieldsData.liveLink || ""}
               onChange={event =>
                 setInputFieldsData(inputFieldsData => ({
                   ...inputFieldsData,
@@ -209,7 +206,7 @@ const EditProject = () => {
               placeholder={
                 inputFieldsData.frontendLink || "Project Frontend Link ..."
               }
-              value={frontendInput}
+              value={inputFieldsData.frontendLink || ""}
               onChange={event =>
                 setInputFieldsData(inputFieldsData => ({
                   ...inputFieldsData,
@@ -227,7 +224,7 @@ const EditProject = () => {
               placeholder={
                 inputFieldsData.backendLink || "Project Backend Link ..."
               }
-              value={backendInput}
+              value={inputFieldsData.backendLink || ""}
               onChange={event =>
                 setInputFieldsData(inputFieldsData => ({
                   ...inputFieldsData,
@@ -325,7 +322,7 @@ const EditProject = () => {
       headers: {
         authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
       },
-      data: setNewData(),
+      data: inputFieldsData,
       responseType: "json",
     })
       .then(result => {
