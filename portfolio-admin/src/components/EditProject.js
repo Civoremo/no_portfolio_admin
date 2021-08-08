@@ -6,12 +6,6 @@ import { useParams } from "react-router-dom";
 
 const EditProject = () => {
   let { id } = useParams();
-  const [titleInput, setTitleInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
-  const [stackInput, setStackInput] = useState("");
-  const [liveLinkInput, setLiveLinkInput] = useState("");
-  const [frontendInput, setFrontendInput] = useState("");
-  const [backendInput, setBackendInput] = useState("");
   const [projectInfo, setProjectInfo] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
 
@@ -250,67 +244,12 @@ const EditProject = () => {
 
   const resetInputFields = e => {
     e.preventDefault();
-    setTitleInput("");
-    setDescriptionInput("");
-    setStackInput("");
-    setLiveLinkInput("");
-    setFrontendInput("");
-    setBackendInput("");
-  };
+    let tempInputs = {};
+    for (let item in projectInfo[0]) {
+      tempInputs[item] = projectInfo[0][item];
+    }
 
-  const setNewData = () => {
-    let updatedData = {
-      id: id,
-      title: titleInput === "" ? projectInfo[0].title : titleInput,
-      description:
-        descriptionInput === "" ? projectInfo[0].title : descriptionInput,
-      stack:
-        // if input is empty and project stack data is null
-        stackInput === "" && projectInfo[0].stack === null
-          ? // leave it as null
-            null
-          : //otherwise, if input is empty but project stack data has info
-          stackInput === "" && projectInfo[0].stack !== null
-          ? // leave it as the data it already has
-            projectInfo[0].stack
-          : // otherwise, set project stack data as the new input text
-            stackInput,
-      liveLink:
-        // input is empty and data is null
-        liveLinkInput === "" && projectInfo[0].liveLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          liveLinkInput === "" && projectInfo[0].liveLink !== null
-          ? // leave exsisting data
-            projectInfo[0].liveLink
-          : // otherwise set new input data
-            liveLinkInput,
-      frontendLink:
-        // input is empty and data is null
-        frontendInput === "" && projectInfo[0].frontendLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          frontendInput === "" && projectInfo[0].frontendLink !== null
-          ? // leave existing data
-            projectInfo[0].frontendLink
-          : // otherwise set new input data
-            frontendInput,
-      backendLink:
-        // input is empty and data is null
-        backendInput === "" && projectInfo[0].backendLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          backendInput === "" && projectInfo[0].backendLink !== null
-          ? // leave existing data
-            projectInfo[0].backendLink
-          : // otherwise set new input data
-            backendInput,
-    };
-
-    return updatedData;
+    setInputFieldsData(tempInputs);
   };
 
   const saveProjectData = e => {
