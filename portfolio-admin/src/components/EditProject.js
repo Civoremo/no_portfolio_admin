@@ -15,6 +15,8 @@ const EditProject = () => {
   const [projectInfo, setProjectInfo] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
 
+  const [inputFieldsData, setInputFieldsData] = useState(null);
+
   useEffect(() => {
     axios({
       method: "get",
@@ -28,6 +30,14 @@ const EditProject = () => {
             project => project.id === parseInt(id)
           );
           console.log("filtered", filtered);
+          let tempInputsObject = {};
+          for (let item in filtered[0]) {
+            // console.log(item);
+            tempInputsObject[item] = filtered[0][item];
+            // console.log(tempInputsObject);
+          }
+
+          setInputFieldsData(tempInputsObject);
           setProjectInfo(filtered);
         } else {
           alert("Something went wrong with fetching project data.");
@@ -99,6 +109,7 @@ const EditProject = () => {
   const displayProjectData = () => {
     return (
       <div>
+        {console.log("inputs", inputFieldsData)}
         <div>
           <div>
             <img
@@ -126,12 +137,16 @@ const EditProject = () => {
             <input
               type='text'
               name='Project Title'
-              placeholder={projectInfo[0].title}
-              value={titleInput}
+              placeholder={inputFieldsData.title || "Project Title ..."}
+              value={inputFieldsData.title || ""}
               required
               autoComplete='off'
-              onFocus={event => setTitleInput(projectInfo[0].title)}
-              onChange={event => setTitleInput(event.target.value)}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  title: event.target.value,
+                }))
+              }
             />
             <br />
             <label>Description (req)</label>
@@ -140,12 +155,18 @@ const EditProject = () => {
               cols='50'
               rows='10'
               name='Project Description'
-              placeholder={projectInfo[0].description}
-              value={descriptionInput}
+              placeholder={
+                inputFieldsData.description || "Project Description ..."
+              }
+              value={inputFieldsData.description || ""}
               required
               autoComplete='off'
-              onFocus={event => setDescriptionInput(projectInfo[0].description)}
-              onChange={event => setDescriptionInput(event.target.value)}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  description: event.target.value,
+                }))
+              }
             />
             <br />
             <label>Stack</label>
@@ -154,80 +175,68 @@ const EditProject = () => {
               cols='50'
               rows='5'
               name='Project Stack'
-              placeholder={
-                projectInfo[0].stack === null
-                  ? "Project Stack ..."
-                  : projectInfo[0].stack
+              placeholder={inputFieldsData.stack || "Project Stack ..."}
+              value={inputFieldsData.stack || ""}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  stack: event.target.value,
+                }))
               }
-              value={stackInput}
-              onFocus={event =>
-                projectInfo[0].stack === null
-                  ? ""
-                  : setStackInput(projectInfo[0].stack)
-              }
-              onChange={event => setStackInput(event.target.value)}
             />
-            <button onClick={event => removeData(event, "stack")}>Clean</button>
+            <button onClick={event => removeData(event, "stack")}>Clear</button>
             <br />
             <label>Live Link</label>
             <input
               type='text'
               name='Project Live Link'
-              placeholder={
-                projectInfo[0].liveLink === null
-                  ? "Live URL ..."
-                  : projectInfo[0].liveLink
-              }
+              placeholder={inputFieldsData.liveLink || "Project Live Link ..."}
               value={liveLinkInput}
-              onFocus={event =>
-                projectInfo[0].liveLink === null
-                  ? ""
-                  : setLiveLinkInput(projectInfo[0].liveLink)
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  liveLink: event.target.value,
+                }))
               }
-              onChange={event => setLiveLinkInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "liveLink")}>
-              Clean
+              Clear
             </button>
             <label>Frontend Link</label>
             <input
               type='text'
               name='Project Frontend Link'
               placeholder={
-                projectInfo[0].frontendLink === null
-                  ? "Frontend URL ..."
-                  : projectInfo[0].frontendLink
+                inputFieldsData.frontendLink || "Project Frontend Link ..."
               }
               value={frontendInput}
-              onFocus={event =>
-                projectInfo[0].frontendLink === null
-                  ? setFrontendInput("")
-                  : setFrontendInput(projectInfo[0].frontendLink)
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  frontendLink: event.target.value,
+                }))
               }
-              onChange={event => setFrontendInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "frontendLink")}>
-              Clean
+              Clear
             </button>
             <label>Backend Link</label>
             <input
               type='text'
               name='backendLink'
               placeholder={
-                projectInfo[0].backendLink === null
-                  ? "Backend URL ..."
-                  : projectInfo[0].backendLink
+                inputFieldsData.backendLink || "Project Backend Link ..."
               }
               value={backendInput}
-              onFocus={event =>
-                projectInfo[0].backendLink === null
-                  ? ""
-                  : setBackendInput(projectInfo[0].backendLink)
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  backendLink: event.target.value,
+                }))
               }
-              onChange={event => setBackendInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "backendLink")}>
-              Clean
+              Clear
             </button>
           </form>
           <br />
@@ -362,7 +371,7 @@ const EditProject = () => {
       });
   };
 
-  if (projectInfo === null) {
+  if (projectInfo === null || inputFieldsData === null) {
     return <>Loading ...</>;
   }
 
