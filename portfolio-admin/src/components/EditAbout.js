@@ -23,10 +23,6 @@ const EditAbout = () => {
       .then(result => {
         setAboutContent(result.data);
         setSectionTitle(result.data[0].title);
-
-        // const sortedContentByAscId = result.data[1].sort((a, b) => {
-        //   return a.id - b.id;
-        // });
         setSectionContent(result.data[1]);
       })
       .catch(err => {

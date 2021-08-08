@@ -6,14 +6,10 @@ import { useParams } from "react-router-dom";
 
 const EditProject = () => {
   let { id } = useParams();
-  const [titleInput, setTitleInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
-  const [stackInput, setStackInput] = useState("");
-  const [liveLinkInput, setLiveLinkInput] = useState("");
-  const [frontendInput, setFrontendInput] = useState("");
-  const [backendInput, setBackendInput] = useState("");
   const [projectInfo, setProjectInfo] = useState(null);
   const [changeCount, setChangeCount] = useState(0);
+
+  const [inputFieldsData, setInputFieldsData] = useState(null);
 
   useEffect(() => {
     axios({
@@ -28,6 +24,12 @@ const EditProject = () => {
             project => project.id === parseInt(id)
           );
 
+          let tempInputsObject = {};
+          for (let item in filtered[0]) {
+            tempInputsObject[item] = filtered[0][item];
+          }
+
+          setInputFieldsData(tempInputsObject);
           setProjectInfo(filtered);
         } else {
           alert("Something went wrong with fetching project data.");
@@ -126,12 +128,16 @@ const EditProject = () => {
             <input
               type='text'
               name='Project Title'
-              placeholder={projectInfo[0].title}
-              value={titleInput}
+              placeholder={inputFieldsData.title || "Project Title ..."}
+              value={inputFieldsData.title || ""}
               required
               autoComplete='off'
-              onFocus={event => setTitleInput(projectInfo[0].title)}
-              onChange={event => setTitleInput(event.target.value)}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  title: event.target.value,
+                }))
+              }
             />
             <br />
             <label>Description (req)</label>
@@ -140,12 +146,18 @@ const EditProject = () => {
               cols='50'
               rows='10'
               name='Project Description'
-              placeholder={projectInfo[0].description}
-              value={descriptionInput}
+              placeholder={
+                inputFieldsData.description || "Project Description ..."
+              }
+              value={inputFieldsData.description || ""}
               required
               autoComplete='off'
-              onFocus={event => setDescriptionInput(projectInfo[0].description)}
-              onChange={event => setDescriptionInput(event.target.value)}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  description: event.target.value,
+                }))
+              }
             />
             <br />
             <label>Stack</label>
@@ -154,80 +166,68 @@ const EditProject = () => {
               cols='50'
               rows='5'
               name='Project Stack'
-              placeholder={
-                projectInfo[0].stack === null
-                  ? "Project Stack ..."
-                  : projectInfo[0].stack
+              placeholder={inputFieldsData.stack || "Project Stack ..."}
+              value={inputFieldsData.stack || ""}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  stack: event.target.value,
+                }))
               }
-              value={stackInput}
-              onFocus={event =>
-                projectInfo[0].stack === null
-                  ? ""
-                  : setStackInput(projectInfo[0].stack)
-              }
-              onChange={event => setStackInput(event.target.value)}
             />
-            <button onClick={event => removeData(event, "stack")}>Clean</button>
+            <button onClick={event => removeData(event, "stack")}>Clear</button>
             <br />
             <label>Live Link</label>
             <input
               type='text'
               name='Project Live Link'
-              placeholder={
-                projectInfo[0].liveLink === null
-                  ? "Live URL ..."
-                  : projectInfo[0].liveLink
+              placeholder={inputFieldsData.liveLink || "Project Live Link ..."}
+              value={inputFieldsData.liveLink || ""}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  liveLink: event.target.value,
+                }))
               }
-              value={liveLinkInput}
-              onFocus={event =>
-                projectInfo[0].liveLink === null
-                  ? ""
-                  : setLiveLinkInput(projectInfo[0].liveLink)
-              }
-              onChange={event => setLiveLinkInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "liveLink")}>
-              Clean
+              Clear
             </button>
             <label>Frontend Link</label>
             <input
               type='text'
               name='Project Frontend Link'
               placeholder={
-                projectInfo[0].frontendLink === null
-                  ? "Frontend URL ..."
-                  : projectInfo[0].frontendLink
+                inputFieldsData.frontendLink || "Project Frontend Link ..."
               }
-              value={frontendInput}
-              onFocus={event =>
-                projectInfo[0].frontendLink === null
-                  ? setFrontendInput("")
-                  : setFrontendInput(projectInfo[0].frontendLink)
+              value={inputFieldsData.frontendLink || ""}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  frontendLink: event.target.value,
+                }))
               }
-              onChange={event => setFrontendInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "frontendLink")}>
-              Clean
+              Clear
             </button>
             <label>Backend Link</label>
             <input
               type='text'
               name='backendLink'
               placeholder={
-                projectInfo[0].backendLink === null
-                  ? "Backend URL ..."
-                  : projectInfo[0].backendLink
+                inputFieldsData.backendLink || "Project Backend Link ..."
               }
-              value={backendInput}
-              onFocus={event =>
-                projectInfo[0].backendLink === null
-                  ? ""
-                  : setBackendInput(projectInfo[0].backendLink)
+              value={inputFieldsData.backendLink || ""}
+              onChange={event =>
+                setInputFieldsData(inputFieldsData => ({
+                  ...inputFieldsData,
+                  backendLink: event.target.value,
+                }))
               }
-              onChange={event => setBackendInput(event.target.value)}
             />
             <button onClick={event => removeData(event, "backendLink")}>
-              Clean
+              Clear
             </button>
           </form>
           <br />
@@ -244,67 +244,12 @@ const EditProject = () => {
 
   const resetInputFields = e => {
     e.preventDefault();
-    setTitleInput("");
-    setDescriptionInput("");
-    setStackInput("");
-    setLiveLinkInput("");
-    setFrontendInput("");
-    setBackendInput("");
-  };
+    let tempInputs = {};
+    for (let item in projectInfo[0]) {
+      tempInputs[item] = projectInfo[0][item];
+    }
 
-  const setNewData = () => {
-    let updatedData = {
-      id: id,
-      title: titleInput === "" ? projectInfo[0].title : titleInput,
-      description:
-        descriptionInput === "" ? projectInfo[0].title : descriptionInput,
-      stack:
-        // if input is empty and project stack data is null
-        stackInput === "" && projectInfo[0].stack === null
-          ? // leave it as null
-            null
-          : //otherwise, if input is empty but project stack data has info
-          stackInput === "" && projectInfo[0].stack !== null
-          ? // leave it as the data it already has
-            projectInfo[0].stack
-          : // otherwise, set project stack data as the new input text
-            stackInput,
-      liveLink:
-        // input is empty and data is null
-        liveLinkInput === "" && projectInfo[0].liveLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          liveLinkInput === "" && projectInfo[0].liveLink !== null
-          ? // leave exsisting data
-            projectInfo[0].liveLink
-          : // otherwise set new input data
-            liveLinkInput,
-      frontendLink:
-        // input is empty and data is null
-        frontendInput === "" && projectInfo[0].frontendLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          frontendInput === "" && projectInfo[0].frontendLink !== null
-          ? // leave existing data
-            projectInfo[0].frontendLink
-          : // otherwise set new input data
-            frontendInput,
-      backendLink:
-        // input is empty and data is null
-        backendInput === "" && projectInfo[0].backendLink === null
-          ? // leave as null
-            null
-          : // if input is empty but data has info
-          backendInput === "" && projectInfo[0].backendLink !== null
-          ? // leave existing data
-            projectInfo[0].backendLink
-          : // otherwise set new input data
-            backendInput,
-    };
-
-    return updatedData;
+    setInputFieldsData(tempInputs);
   };
 
   const saveProjectData = e => {
@@ -316,7 +261,7 @@ const EditProject = () => {
       headers: {
         authorization: JSON.parse(localStorage.getItem("on_portfolio_token")),
       },
-      data: setNewData(),
+      data: inputFieldsData,
       responseType: "json",
     })
       .then(result => {
@@ -362,7 +307,7 @@ const EditProject = () => {
       });
   };
 
-  if (projectInfo === null) {
+  if (projectInfo === null || inputFieldsData === null) {
     return <>Loading ...</>;
   }
 
