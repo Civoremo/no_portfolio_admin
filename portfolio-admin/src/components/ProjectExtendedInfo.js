@@ -35,7 +35,13 @@ const ProjectExtendedInfo = () => {
       <div>
         <div>Extended Description</div>
         <hr />
-        <div style={{ border: "1px solid grey", padding: "20px 20px" }}>
+        <div
+          style={{
+            border: "1px solid grey",
+            padding: "20px 20px",
+            whiteSpace: "pre-wrap",
+          }}
+        >
           <div
             style={{
               display: projectExtendedInfo[0].link !== null ? "block" : "none",
