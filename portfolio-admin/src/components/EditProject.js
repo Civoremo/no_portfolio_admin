@@ -27,7 +27,7 @@ const EditProject = () => {
           let filtered = result.data.filter(
             project => project.id === parseInt(id)
           );
-
+          console.log("filtered", filtered);
           setProjectInfo(filtered);
         } else {
           alert("Something went wrong with fetching project data.");
